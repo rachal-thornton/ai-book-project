@@ -1,6 +1,6 @@
 # Author: Rachal Thornton
 # Class: CS445-01 Artificial Intelligence
-# Due: 
+# Due: 11/30/26
 # Desc: A program to clean a csv file storing book information
 
 # IMPORTS
@@ -10,6 +10,7 @@ from pathlib import Path
 
 # FUNCTION
 def clean_books(input: Path, output: Path):
+    """Clean books csv dataset."""
     # Define data types in schema
     user_schema = {
         'id': 'int',
@@ -43,7 +44,7 @@ def clean_books(input: Path, output: Path):
         'setting': literal_eval
     }
 
-    # Read raw books csv
+    # Read raw books csv, store num of raw books
     books = pd.read_csv(input, dtype=user_schema, converters=user_converters, low_memory=True)
     raw_books = len(books)
 
@@ -97,9 +98,3 @@ def clean_books(input: Path, output: Path):
     print(f"Saved cleaned data to: {output}")
 
     return books
-
-# TESTING
-if __name__ == "__main__":
-    input_path = Path("ai-book-project/data/books.csv")
-    output_path = Path("ai-book-project/data/books_cleaned.csv")
-    books = clean_books(input_path, output_path)
