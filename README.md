@@ -1,3 +1,4 @@
-## Data Source
+## Data Sources
 
-use https://www.kaggle.com/competitions/book-prices-prediction/data?utm_source=chatgpt.com&select=books_train.csv
+- https://www.kaggle.com/competitions/book-prices-prediction/data?select=books_train.csv
+- https://openlibrary.org/dev/docs/api/covers
