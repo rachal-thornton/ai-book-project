@@ -1,7 +1,7 @@
 # Author: Rachal Thornton
 # Class: CS445-01 Artificial Intelligence
 # Due: 11/30/26
-# Desc: A program to clean a csv file storing book information
+# Desc: A program to train and recommend a user books based on their entered favorite books.
 
 # IMPORTS
 import numpy as np
@@ -10,7 +10,7 @@ from sklearn.metrics.pairwise import linear_kernel
 
 # FUNCTIONS
 def train_recommender(books):
-    """Train a content-based book recommendation model."""
+    """Train a model to vectorize book information."""
 
     # Copy books data to avoid altering original
     books = books.copy()
@@ -36,15 +36,10 @@ def train_recommender(books):
         min_df=2                # Only store words that appear in 2 or more books
     )
 
-    # Fit model
+    # Fit model on book metadata
     tfidf_matrix = vectorizer.fit_transform(books["combined_meta"])
 
-    # Debug:
-    print("TF-IDF matrix shape:", tfidf_matrix.shape)
-    print("Vocabulary size:", len(vectorizer.vocabulary_))
-
     return books, vectorizer, tfidf_matrix
-
 
 def recommend_books(
     fav_titles,         # User-entered favorite books
@@ -76,13 +71,15 @@ def recommend_books(
         return books.iloc[0:0].copy()
 
     # Create a user profile by averaging the favorite book vectors
+    # TODO: Currently, takes into account all favorite books equally,
+    #       change to allow users to put weight to their favorite books
     user_profile = np.asarray(
         tfidf_matrix[fav_indices].mean(axis=0)
     )
 
-    print("User profile shape:", user_profile.shape)
-    print("Nonzero profile values:", np.count_nonzero(user_profile))
-
+    # TODO: Currently, just uses the similarity scoring to sort books,
+    #       change to take into account other aspects, such as number of 5 stars, awards, and liked percent
+    
     # Calculate similarity between the user profile and every book
     scores = linear_kernel(user_profile, tfidf_matrix).ravel()
 
