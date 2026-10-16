@@ -221,3 +221,6 @@ __marimo__/
 
 # Ignore PDF
 *.pdf
+
+# Ignore csv files
+*.csv
