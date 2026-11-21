@@ -35,7 +35,7 @@ def clean_books(input: Path, output: Path):
 
     }
 
-    # Define list data types, parses list string into actual list
+    # Define list data types, parses the list (String) into an actual list of Strings
     user_converters = {
         'genres': literal_eval,
         'characters': literal_eval,
@@ -64,10 +64,12 @@ def clean_books(input: Path, output: Path):
             f"Available columns: {list(books.columns)}"
         )
 
-    # Drop books without required information
+    # Drop books without required information,
+    # In this case, null values for title or author
     books = books.dropna(subset=["title", "author"])
 
-    # Remove books with empty titles or authors
+    # Remove books with empty String of titles or authors
+    # Empty String is treated differently than null values
     books = books[
         (books["title"] != "") &
         (books["author"] != "")
@@ -88,7 +90,7 @@ def clean_books(input: Path, output: Path):
     # Reset row indexes after removing books
     books = books.reset_index(drop=True)
 
-    # Saved cleaned output to new output CSV file
+    # Save cleaned output to new output CSV file
     books.to_csv(output, index=False)
 
     # Print out summary
