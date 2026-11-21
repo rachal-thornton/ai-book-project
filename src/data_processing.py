@@ -21,16 +21,16 @@ def clean_books(input: Path, output: Path):
         'description': 'str',
         'language': 'str',
         'isbn': 'double',
-        'bookFormat': 'str',
+        'bookformat': 'str',
         'edition': 'str',
         'pages': 'str',
         'publisher': 'str',
-        'publishDate': 'str',
-        'firstPublishDate': 'str',
-        'numRatings': 'Int64',
-        'likedPercent': 'Int64',
-        'bbeScore': 'Int64',
-        'bbeVotes': 'Int64',
+        'publishdate': 'str',
+        'firstpublishdate': 'str',
+        'numratings': 'Int64',
+        'likedpercent': 'Int64',
+        'bbescore': 'Int64',
+        'bbevotes': 'Int64',
         'price': 'float64' 
 
     }
@@ -40,7 +40,7 @@ def clean_books(input: Path, output: Path):
         'genres': literal_eval,
         'characters': literal_eval,
         'awards': literal_eval,
-        'ratingsByStars': literal_eval, # List of num of ratings recieved for each star [5, 4, 3, 2, 1]
+        'ratingsbystars': literal_eval, # List of num of ratings recieved for each star [5, 4, 3, 2, 1]
         'setting': literal_eval
     }
 
