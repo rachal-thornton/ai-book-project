@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#517151"         # Color for primary UI elements (buttons, links, active tabs)
+backgroundColor = "#f9f3df"      # Main background color
+secondaryBackgroundColor = "#81ac81" # Sidebar and secondary container background color
+textColor = "#403626"            # Main text color
+font = "sans serif"              # Options: "sans serif", "serif", or "mono"
