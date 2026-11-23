@@ -12,11 +12,11 @@ st.title("MetaReads")
 # Main body
 st.markdown(
     """
-    *Welcome to **MetaReads**!* We are a book recommendation application that use your 
+    *Welcome to **MetaReads**!* We are a book recommendation application that uses your 
     favorite books to suggest you something new to read. Click on the sidebar to try one
-    of our searches!
-"""
-    )
+    of our search algorithms!
+    """
+)
 
 # Divider and credits
 st.divider()

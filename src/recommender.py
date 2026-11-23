@@ -5,10 +5,83 @@
 
 # IMPORTS
 import numpy as np
+import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 
+# CONSTANTS
+# Percentage of how important each attribute is to recommending a book
+DEFAULT_WEIGHTS = {
+    "bayesian": 0.4,     # Bayesian rating-- will prevent books with high-score reviews but low number of reviewers from dominating ranking 
+    "liked": 0.3,        # Liked percentage
+    "five_stars": 0.2,   # 5 star rating percentage
+    "awards": 0.1       # Book awards percentage
+}
+
 # FUNCTIONS
+def five_star_rate(ratingsbystars):
+    """Calculates the percentage of 5 star ratings for a book
+    based on the 'ratingsByStars' column in the dataset that holds
+    ratings in the order of: [5, 4, 3, 2, 1]."""
+
+    try:
+        # Convert list of starts into NumPy array
+        np_stars = np.asarray(ratingsbystars, dtype=float)
+
+        if len(np_stars) == 5 and np_stars.sum() > 0:
+            # Return number of 5 star ratings divided by total number of ratings
+            return np_stars[0] / np_stars.sum()
+        else: 
+            # Return null if something is wrong with the stars array or number of ratings
+            np.nan
+    except (TypeError, ValueError):
+        return np.nan
+
+def book_quality(books, weights=None):
+    """Determines the overall quality for each book in the dataset given the provided weights,
+    or uses default weights if none are provided. Provides a score between 0-1 of how well each book is liked."""
+    weights = weights or DEFAULT_WEIGHTS
+    parts = {}  # Stores each quality measurement 
+
+    # Bayesian rating
+    if "rating" in books and "numratings" in books:
+        rating = pd.to_numeric(books["ratings"], errors="coerce").astype("float64") # Average rating for the book
+        num_ratings = pd.to_numeric(books["numratings"], errors="coerce").astype("float64").fillna(0) # Total number of ratings the book recieved
+        avg_rating = rating.mean() # Average book rating across whole dataset
+        median_ratings = max(float(num_ratings()), 1.0) # Median number of ratings across whole dataset
+
+        # Bayesian calculation-- will prevent books with high-score reviews but low number of reviewers from dominating ranking 
+        parts["bayesian"] = (num_ratings / (num_ratings + median_ratings)) * rating.fillna(avg_rating) + (median_ratings / (num_ratings + median_ratings)) * avg_rating 
+
+    # Liked percentage-- Returns percentage of readers who liked the book
+    if "likedpercent" in books:
+        parts["liked"] = pd.to_numeric(books["likedpercent"], errors="coerce").astype("float64")
+
+    # 5 star percentage-- Returns proportion of 5 star ratings
+    if "ratingsbystars" in books:
+        parts["five_stars"] = books["ratingsbystars"].apply(five_star_rate)
+
+    # Awards-- Returns how many awards each book received
+    if "awards" in books:
+        # Checks awards is in a list format, uses natural log of 1 + award count to apply diminishing returns to books with large number of awards
+        parts["awards"] = np.log1p(books["awards"].apply(lambda a: len(a) if isinstance(a, list) else 0))
+
+    # Get rid of measurements without a defined weight
+    parts = {key: value for key, value in parts.items() if key in weights}
+
+    # If no quality measurements available, return an array of zeros 
+    if not parts:
+        return np.zeros(len(books))
+
+    # Calculate total weight of available measurements
+    total = sum(weights[key] for key in parts)
+
+    # Combine measurements into an overall quality score between 0 and 1
+    score = sum(weights[key].rank(pct=True).fillna(0.5) for key in parts) / total
+
+    # Return the quality scores for each book as a NumPy array that cooresponds to the same row as the book
+    return score.to_numpy(dtype=float)
+
 def train_recommender(books):
     """Train a model to vectorize book information."""
 
