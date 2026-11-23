@@ -10,7 +10,8 @@ import streamlit as st
 st.title("Book Recommender Using Algorithm")
 
 # Main body
-st.write("Don't see your favorite book listed? Try our filtered search instead!")
+st.write("Don't see your favorite book listed? Try our filtered search to look for a new book instead!")
+st.caption("Due to a limited number of books in the dataset, your favorite one might not be included. Sorry!")
 
 # Search for book in database
 # TODO: implement a way for users to search for multiple books,
