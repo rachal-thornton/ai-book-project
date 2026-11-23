@@ -11,8 +11,6 @@ import streamlit as st
 st.set_page_config(
     page_title="MetaReads",
     page_icon="🚀"
-    #page_icon="assets/my_favicon.png", # Path to your file
-    #layout="wide"
 )
 
 # Page setup
