@@ -19,9 +19,10 @@ st.set_page_config(
 home = st.Page("pages/01_Home.py", title="Home", icon="🏠")
 alg_search = st.Page("pages/02_Algorithm.py", title="Algorithm Search", icon="🔍")
 fil_search = st.Page("pages/03_Filter.py", title="Filter Search", icon="📊")
+about = st.Page("pages/04_About.py", title="About", icon="ℹ️")
 
 # Navigation 
-pg = st.navigation([home, alg_search, fil_search], position="sidebar")
+pg = st.navigation([home, alg_search, fil_search, about], position="sidebar")
 
 # Run selected page 
 pg.run()
